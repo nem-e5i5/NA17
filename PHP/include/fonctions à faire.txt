@@ -1,0 +1,12 @@
+############    gestion utilisateurs    ############
+
+user_droit($user) => récupère dans la base les droit de l'utilisateur donné par son ID
+user_exists($user, $pass) => vérifie que l'utilisateur $user avec le mot de passe $pass existe dans la DB
+
+############      gestion articles      ############
+
+get_blocs($articleid) => retourne tout les blocs trié dans le bon ordre associé à l'article defini par son ID
+get_tags($articleid)  => retourne tout les tags associé à l'article défini par son ID
+get_ties($articleid)  => retourne tout les articles liés à un article
+get_rubriques($nomrubrique) => retourne toute les sous rubriques de la rubrique $nomrubrique, si $nomrubrique == null, retourne toute les rubriques"racines" (donc sans rubrique parente).
+
