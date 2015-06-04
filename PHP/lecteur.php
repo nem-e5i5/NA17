@@ -2,6 +2,10 @@
 function affiche_rubrique($rubrique)
 {
 	echo "<div>";
+	echo '<a href="?rubrique=honneur"> A L\'HONNEUR</a>';
+	echo "</div>";
+	
+	echo "<div>";
 	if ($rubrique != null) echo '<a href="?rubrique=' . urlencode($rubrique["title"]) . '">' . $rubrique["title"] . '</a>';
 	$srl = get_rubrique($rubrique == null? $rubrique["title"] : null);
 	if (!empty($srl))
