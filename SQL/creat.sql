@@ -4,16 +4,11 @@ CREATE TABLE TUSER(
 	login CHAR(7) PRIMARY KEY,
 	firstName VARCHAR(20),
 	lastName VARCHAR(20),
-	aPassword CHAR(8) NOT NULL
-	--creator CHAR(7) REFERENCES TUSER(login) /*NOT NULL???*/
+	aPassword CHAR(8) NOT NULL,
+	droit VARCHAR(20) NOT NULL,
+	CHECK (droit IN ('administrateur', 'editeur', 'auteur', 'lecteur', 'moderateur'))
 );
 
-CREATE TABLE DROIT_USER(
-	login CHAR(7) REFERENCES TUSER(login),
-	droit VARCHAR(20),
-	PRIMARY KEY(login, droit),
-	CHECK (droit IN ('administrateur', 'auteur', 'lecteur', 'editeur', 'moderateur'))
-);
 
 CREATE TABLE ARTICLE(
 	id INTEGER PRIMARY KEY,
@@ -30,19 +25,19 @@ CREATE TABLE ARTICLE(
 );
 
 CREATE TABLE HISTORIQUE_ARTICLE(
-	art INTEGER REFERENCES ARTICLE(id),
-	aDate TIMESTAMP,
+	id INTEGER PRIMARY KEY,
+	art INTEGER REFERENCES ARTICLE(id) NOT NULL,
+	aDate TIMESTAMP NOT NULL,
 	login CHAR(7) REFERENCES TUSER(login) NOT NULL,
-	aAction VARCHAR(10) NOT NULL,
-	PRIMARY KEY(art, aDate),
-	CHECK (aAction IN('creer', 'supprimer', 'soumettre', 'recuperer', 'corriger', 'associer_statut', 'mot_cle', 'honorer', 'deshonorer', 'lier_article', 'lier_rubrique', 'publier'))
+	aAction VARCHAR(20) NOT NULL,
+	CHECK (aAction IN('creer', 'supprimer', 'soumettre', 'recuperer', 'corriger', 'associer_statut', 'mot_cle', 'honorer', 'deshonorer', 'lier_article', 'lier_rubrique', 'publier', 'valider'))
 );
 
 CREATE TABLE TIE_ARTICLE(
 	firstArticle INTEGER REFERENCES ARTICLE(id),
 	secondArticle INTEGER REFERENCES ARTICLE(id),
 	CHECK(firstArticle!=secondArticle),
-	UNIQUE(firstArticle,secondArticle), --(1,2) et (2,1) sont pareils
+	UNIQUE(secondArticle,firstArticle), --(1,2) et (2,1) sont pareils
 	PRIMARY KEY(firstArticle, secondArticle)
 );
 
@@ -68,10 +63,10 @@ CREATE TABLE RUBRIQUE_ARTICLE(
 CREATE TABLE BLOC(
 	art INTEGER REFERENCES ARTICLE(id),
 	aOrder INTEGER,
-	title VARCHAR(50) NOT NULL,
+	title VARCHAR(200) NOT NULL,
 	texte TEXT,
 	image_uml VARCHAR(200),
-	CHECK((texte NOT NULL) OR (image_uml NOT NULL) ),
+	CHECK((texte IS NOT NULL) OR (image_uml IS NOT NULL) ),
 	PRIMARY KEY(art, aOrder)
 );
 
@@ -90,17 +85,16 @@ CREATE TABLE COMMENTAIRE(
 	creator CHAR(7) REFERENCES TUSER(login) NOT NULL,
 	texte TEXT NOT NULL,
 	statut VARCHAR(10),
-	CHECK (statut IN ('visible', 'masque', 'supprime', 'exergue')),
-	UNIQUE(art, aDate)
+	CHECK (statut IN ('visible', 'masque', 'supprime', 'exergue'))
 );
 
 CREATE TABLE HISTORIQUE_COMMENTAIRE(
-	comm INTEGER REFERENCES COMMENTAIRE(id),
-	aDate TIMESTAMP,
+	id INTEGER PRIMARY KEY,
+	comm INTEGER REFERENCES COMMENTAIRE(id) NOT NULL,
+	aDate TIMESTAMP NOT NULL,
 	login CHAR(7) REFERENCES TUSER(login) NOT NULL,
-	aAction VARCHAR(10) NOT NULL,
-	CHECK (aAction IN ('recuperer','masquer', 'supprimer', 'exergue')),
-	PRIMARY KEY(comm, aDate)
+	aAction VARCHAR(20) NOT NULL,
+	CHECK (aAction IN ('recuperer','masquer', 'supprimer', 'exergue'))
 );
 
 CREATE TABLE PRECONISATION(
@@ -108,26 +102,20 @@ CREATE TABLE PRECONISATION(
 	aDate TIMESTAMP,
 	editor CHAR(7) NOT NULL REFERENCES TUSER(login),
 	texte TEXT NOT NULL,
-	PRIMARY KEY(art, aDate)	
+	PRIMARY KEY(art, editor)	
 );
-
-COMMIT;
-
-
-
-
 
 
 
 
 --------------------------------------SEQUENCES----------------------------------------------------------------
-BEGIN TRANSACTION;
+
 
 --Identité des articles
 CREATE SEQUENCE idauto_art
 INCREMENT BY 1
 NO MAXVALUE
-START WITH 4
+START WITH 8
 NO CYCLE;
 
 
@@ -135,17 +123,27 @@ NO CYCLE;
 CREATE SEQUENCE idauto_comm
 INCREMENT BY 1
 NO MAXVALUE
-START WITH 4
+START WITH 18
 NO CYCLE;
 
-COMMIT;
+--Identité des historiques des articles
+CREATE SEQUENCE idauto_his_art
+INCREMENT BY 1
+NO MAXVALUE
+START WITH 1
+NO CYCLE;
 
-
+--Identité des historiques des commentaires
+CREATE SEQUENCE idauto_his_comm
+INCREMENT BY 1
+NO MAXVALUE
+START WITH 1
+NO CYCLE;
 
 
 
 --------------------------------------FUNCTION ET TRIGGERS------------------------------------------------------
-BEGIN TRANSACTION;
+
 
 
 
@@ -153,32 +151,38 @@ BEGIN TRANSACTION;
 
 --------L'HISTORIQUE DE CREATION OU CHANGEMENT DE STAUT D'ARTICLE
 CREATE OR REPLACE FUNCTION process_tr_historique_article1() RETURNS TRIGGER AS $tr_historique_article1$
+    DECLARE 
+	act VARCHAR(20);
     BEGIN
         IF (TG_OP = 'UPDATE') THEN
             IF (OLD.statut!=NEW.statut) THEN
 				IF (OLD.statut='supprime' AND NEW.statut!='supprime') THEN
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','recuperer');
+					act:='recuperer';
 				ELSIF (NEW.statut='soumis') THEN
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','soumettre');
+					act:='soumettre';
 				ELSIF (NEW.statut='supprime') THEN
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','supprimer');
+					act:='supprimer';
 				ELSIF (NEW.statut='publie') THEN
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','publier');
+					act:='publier';
+				ELSIF (NEW.statut='valide') THEN
+					act:='valider';
 				ELSE
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','associer_statut');
+					act:='associer_statut';
 				END IF;
+				INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.id ,current_timestamp,'$currentLogin',act);
 			END IF;
 			
 			IF (OLD.honor!=NEW.honor) THEN
 				IF (NEW.honor=1) THEN
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','honorer');
+					act:='honorer';
 				ELSE
-					INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','deshonorer');
+					act:='deshonorer';
 				END IF;
+			INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.id ,current_timestamp,'$currentLogin',act);
 			END IF;
 			
         ELSIF (TG_OP = 'INSERT') THEN
-            INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,NEW.author,'creer');
+            INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.id ,current_timestamp,NEW.author,'creer');
         END IF;
         RETURN NULL; -- result is ignored since this is an AFTER trigger
     END;
@@ -194,8 +198,8 @@ EXECUTE PROCEDURE process_tr_historique_article1();
 --------L'HISTORIQUE DE CREATION DE LIEN ENTRE DEUX ARTICLES
 CREATE OR REPLACE FUNCTION process_tr_historique_article2() RETURNS TRIGGER AS $tr_historique_article2$
     BEGIN
-		INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.firstArticle ,current_timestamp,'$currentLogin','lier_article');
-		INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.secondArticle ,current_timestamp,'$currentLogin','lier_article');
+		INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.firstArticle ,current_timestamp,'$currentLogin','lier_article');
+		INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.secondArticle ,current_timestamp,'$currentLogin','lier_article');
 		RETURN NULL;
     END;
 $tr_historique_article2$ LANGUAGE plpgsql VOLATILE;
@@ -210,7 +214,7 @@ EXECUTE PROCEDURE process_tr_historique_article2();
 --------L'HISTORIQUE DE CREATION DE MOT CLE
 CREATE OR REPLACE FUNCTION process_tr_historique_article3() RETURNS TRIGGER AS $tr_historique_article3$
     BEGIN
-		INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.art ,current_timestamp,'$currentLogin','mot_cle');
+		INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.art ,current_timestamp,'$currentLogin','mot_cle');
 		RETURN NULL;
     END;
 $tr_historique_article3$ LANGUAGE plpgsql VOLATILE;
@@ -225,7 +229,7 @@ EXECUTE PROCEDURE process_tr_historique_article3();
 --------L'HISTORIQUE DE CORRECTION DE TEXTE D'ARTICLE
 CREATE OR REPLACE FUNCTION process_tr_historique_article4() RETURNS TRIGGER AS $tr_historique_article4$
     BEGIN
-		INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.art ,current_timestamp,'$currentLogin','corriger');
+		INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.art ,current_timestamp,'$currentLogin','corriger');
 		RETURN NULL; 
     END;
 $tr_historique_article4$ LANGUAGE plpgsql VOLATILE;
@@ -240,7 +244,7 @@ EXECUTE PROCEDURE process_tr_historique_article4();
 --------L'HISTORIQUE DE LIAISON ENTRE RUBRIQUES ET ARTICLES
 CREATE OR REPLACE FUNCTION process_tr_historique_article5() RETURNS TRIGGER AS $tr_historique_article5$
     BEGIN
-		INSERT INTO HISTORIQUE_ARTICLE(art, aDate, login, aAction ) VALUES (NEW.art ,current_timestamp,'$currentLogin','lier_rubrique');
+		INSERT INTO HISTORIQUE_ARTICLE(id, art, aDate, login, aAction ) VALUES (nextval('idauto_his_art'), NEW.art ,current_timestamp,'$currentLogin','lier_rubrique');
 		RETURN NULL; 
     END;
 $tr_historique_article5$ LANGUAGE plpgsql VOLATILE;
@@ -254,17 +258,20 @@ EXECUTE PROCEDURE process_tr_historique_article5();
 
 --HISTORIQUE DES COMMENTAIRES--------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION process_tr_historique_commentaire() RETURNS TRIGGER AS $tr_historique_commentaire$
+    DECLARE 
+	act VARCHAR(20);
     BEGIN
 		IF (OLD.statut!=NEW.statut) THEN
 			IF(NEW.statut='supprime')THEN
-				INSERT INTO Historique_Commentaire(comm, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','supprimer');
+				act:='supprimer';
 			ELSIF(NEW.statut='visible')THEN
-				INSERT INTO Historique_Commentaire(comm, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','recuperer');
+				act:='recuperer';
 			ELSIF(NEW.statut='exergue')THEN
-				INSERT INTO Historique_Commentaire(comm, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','exergue');
+				act:='exergue';
 			ELSIF(NEW.statut='masque')THEN
-				INSERT INTO Historique_Commentaire(comm, aDate, login, aAction ) VALUES (NEW.id ,current_timestamp,'$currentLogin','masquer');
+				act:='masquer';
 			END IF;	
+			INSERT INTO Historique_Commentaire(id, comm, aDate, login, aAction ) VALUES (nextval('idauto_his_comm'), NEW.id ,current_timestamp,'$currentLogin',act);
 		END IF;
         RETURN NULL; -- result is ignored since this is an AFTER trigger
     END;
@@ -278,7 +285,7 @@ EXECUTE PROCEDURE process_tr_historique_commentaire();
 
 --INSERER DES BLOCS--------------------------------------------------------------------------
 --Retouner l'ordre du bloc automatiquement
-CREATE OR REPLACE FUNCTION fOrdreBloc (idArt INTEGER) RETURN INTEGER AS $$
+CREATE OR REPLACE FUNCTION fOrdreBloc (idArt INTEGER) RETURNS INTEGER AS $$
 DECLARE ord INTEGER;
 BEGIN
 	SELECT nbBloc INTO ord
@@ -303,7 +310,5 @@ AFTER INSERT
 ON BLOC
 FOR EACH ROW 
 EXECUTE PROCEDURE incrementer_nbBloc();
-
-
 
 COMMIT;
