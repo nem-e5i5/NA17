@@ -1,5 +1,30 @@
 BEGIN TRANSACTION; 
 
+DROP TRIGGER tr_historique_article1 ON ARTICLE;
+DROP FUNCTION IF EXISTS process_tr_historique_article1();
+
+DROP TRIGGER tr_historique_article2 ON TIE_ARTICLE CASCADE;
+DROP FUNCTION IF EXISTS process_tr_historique_article2();
+
+DROP TRIGGER tr_historique_article3 ON TAGS CASCADE;
+DROP FUNCTION IF EXISTS process_tr_historique_article3();
+
+DROP TRIGGER tr_historique_article4 ON BLOC CASCADE;
+DROP FUNCTION IF EXISTS process_tr_historique_article4();
+
+DROP TRIGGER tr_historique_article5 ON RUBRIQUE_ARTICLE CASCADE;
+DROP FUNCTION IF EXISTS process_tr_historique_article5();
+
+DROP TRIGGER tr_historique_commentaire ON COMMENTAIRE CASCADE;
+DROP FUNCTION IF EXISTS process_tr_historique_commentaire();
+
+
+DROP FUNCTION IF EXISTS fOrdreBloc (INTEGER);
+
+DROP TRIGGER incrementer_nbBloc ON BLOC CASCADE;
+DROP FUNCTION IF EXISTS incrementer_nbBloc();
+
+
 DROP TABLE PRECONISATION;
 DROP TABLE HISTORIQUE_COMMENTAIRE;
 DROP TABLE COMMENTAIRE;
@@ -11,9 +36,11 @@ DROP TABLE TAGS;
 DROP TABLE TIE_ARTICLE;
 DROP TABLE HISTORIQUE_ARTICLE;
 DROP TABLE ARTICLE;
-DROP TABLE DROIT_USER;
 DROP TABLE TUSER;
 
 DROP SEQUENCE idauto_art;
 DROP SEQUENCE idauto_comm;
+DROP SEQUENCE idauto_his_art;
+DROP SEQUENCE idauto_his_comm;
+
 COMMIT;
