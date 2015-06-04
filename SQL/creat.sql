@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 
 CREATE TABLE TUSER(
-	login CHAR(7) PRIMARY KEY,
+	login VARCHAR(30) PRIMARY KEY,
 	firstName VARCHAR(20),
 	lastName VARCHAR(20),
 	aPassword CHAR(8) NOT NULL,
@@ -16,9 +16,9 @@ CREATE TABLE ARTICLE(
 	nbBloc INTEGER NOT NULL,
 	honor INTEGER,
 	aDate DATE NOT NULL,
-	author CHAR(7) NOT NULL REFERENCES TUSER(login),
+	author VARCHAR(30) NOT NULL REFERENCES TUSER(login),
 	statut VARCHAR(20) NOT NULL,
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	justification TEXT,
 	CHECK (statut IN ('en_relecture', 'en_redaction', 'soumis', 'supprime', 'rejete', 'a_reviser', 'valide', 'publie')),
 	CHECK (nbBloc >=0),
@@ -29,7 +29,7 @@ CREATE TABLE HISTORIQUE_ARTICLE(
 	id INTEGER PRIMARY KEY,
 	art INTEGER REFERENCES ARTICLE(id) NOT NULL,
 	aDate TIMESTAMP NOT NULL,
-	login CHAR(7) REFERENCES TUSER(login) NOT NULL,
+	login VARCHAR(30) REFERENCES TUSER(login) NOT NULL,
 	aAction VARCHAR(20) NOT NULL,
 	CHECK (aAction IN('creer', 'supprimer', 'soumettre', 'recuperer', 'corriger', 'associer_statut', 'mot_cle', 'honorer', 'deshonorer', 'lier_article', 'lier_rubrique', 'publier', 'valider'))
 );
@@ -37,7 +37,7 @@ CREATE TABLE HISTORIQUE_ARTICLE(
 CREATE TABLE TIE_ARTICLE(
 	firstArticle INTEGER REFERENCES ARTICLE(id),
 	secondArticle INTEGER REFERENCES ARTICLE(id),
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	CHECK(firstArticle!=secondArticle),
 	UNIQUE(secondArticle,firstArticle), --(1,2) et (2,1) sont pareils
 	PRIMARY KEY(firstArticle, secondArticle)
@@ -46,21 +46,21 @@ CREATE TABLE TIE_ARTICLE(
 CREATE TABLE TAGS(
 	art INTEGER REFERENCES ARTICLE(id),
 	word VARCHAR(100),
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	PRIMARY KEY(art,word)
 );
 
 CREATE TABLE RUBRIQUE(
 	title VARCHAR(50) PRIMARY KEY,
 	mother VARCHAR(50) REFERENCES RUBRIQUE(title),
-	creator CHAR(7) REFERENCES TUSER(login) NOT NULL,
+	creator VARCHAR(30) REFERENCES TUSER(login) NOT NULL,
 	aDate TIMESTAMP NOT NULL
 );
 
 CREATE TABLE RUBRIQUE_ARTICLE(
 	rub VARCHAR(50) REFERENCES RUBRIQUE(title),
 	art INTEGER REFERENCES ARTICLE(id),
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	PRIMARY KEY(rub, art)
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE BLOC(
 	title VARCHAR(200) NOT NULL,
 	texte TEXT,
 	image_uml VARCHAR(200),
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	CHECK((texte IS NOT NULL) OR (image_uml IS NOT NULL) ),
 	PRIMARY KEY(art, aOrder)
 );
@@ -79,10 +79,10 @@ CREATE TABLE COMMENTAIRE(
 	id INTEGER PRIMARY KEY,
 	art INTEGER REFERENCES ARTICLE(id) NOT NULL,
 	aDate TIMESTAMP NOT NULL,
-	creator CHAR(7) REFERENCES TUSER(login) NOT NULL,
+	creator VARCHAR(30) REFERENCES TUSER(login) NOT NULL,
 	texte TEXT NOT NULL,
 	statut VARCHAR(20) NOT NULL,
-	modi CHAR(7) REFERENCES TUSER(login),
+	modi VARCHAR(30) REFERENCES TUSER(login),
 	CHECK (statut IN ('visible', 'masque', 'supprime', 'exergue'))
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE HISTORIQUE_COMMENTAIRE(
 	id INTEGER PRIMARY KEY,
 	comm INTEGER REFERENCES COMMENTAIRE(id) NOT NULL,
 	aDate TIMESTAMP NOT NULL,
-	login CHAR(7) REFERENCES TUSER(login) NOT NULL,
+	login VARCHAR(30) REFERENCES TUSER(login) NOT NULL,
 	aAction VARCHAR(20) NOT NULL,
 	CHECK (aAction IN ('recuperer','masquer', 'supprimer', 'exergue'))
 );
@@ -98,7 +98,7 @@ CREATE TABLE HISTORIQUE_COMMENTAIRE(
 CREATE TABLE PRECONISATION(
 	art INTEGER REFERENCES ARTICLE(id),
 	aDate TIMESTAMP,
-	editor CHAR(7) NOT NULL REFERENCES TUSER(login),
+	editor VARCHAR(30) NOT NULL REFERENCES TUSER(login),
 	texte TEXT NOT NULL,
 	PRIMARY KEY(art, editor)	
 );
