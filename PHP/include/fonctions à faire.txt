@@ -9,4 +9,4 @@ get_blocs($articleid) => retourne tout les blocs trié dans le bon ordre associé 
 get_tags($articleid)  => retourne tout les tags associé à l'article défini par son ID
 get_ties($articleid)  => retourne tout les articles liés à un article
 get_rubriques($nomrubrique) => retourne toute les sous rubriques de la rubrique $nomrubrique, si $nomrubrique == null, retourne toute les rubriques"racines" (donc sans rubrique parente).
-
+get_articles($categorie, $nombre, $commence) => retourne les $nombre dernier articles de la catégorie $categorie en partant du $commence-ième (exemple get_articles("pêche", 3, 1) retourne les premier articles de pêche, get_articles("pêche", 3, 4) retourne les 3 suivants) Note: cela doit pouvoir gérer le cas $catégorie = "honneur"
