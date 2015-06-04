@@ -32,11 +32,11 @@ INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (1, fOrdreBloc(1)
 INSERT INTO BLOC(art, aOrder, title, texte, image_uml) VALUES (1, fOrdreBloc(1), 'Le prix d''interprétation masculine', NULL, '/image/1.3.jpg');
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('FESTIVAL DE CANNES',1);
-INSERT INTO TAGS (art, word) VALUES (1,'palme dor');
-INSERT INTO TAGS (art, word) VALUES (1,'cannes');
-INSERT INTO TAGS (art, word) VALUES (1,'prix');
-INSERT INTO TAGS (art, word) VALUES (1,'2015');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('FESTIVAL DE CANNES',1,'nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (1,'palme dor', 'nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (1,'cannes', 'nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (1,'prix', 'nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (1,'2015', 'nf17006');
 
 
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (2, 'Avec Vincent Lindon, au pied des marches', 0, 0, '2015-05-25', 'nf17010', 'en_redaction');
@@ -45,11 +45,11 @@ INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (2, fOrdreBloc(2)
 INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (2, fOrdreBloc(2), 'Lui', NULL, '/image/2.1.jpg');
 INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (2, fOrdreBloc(2), 'Lui','Rien à voir avec ces acteurs qui disent détester « la promo cannoise », ces interviews données à la chaîne, trois jours durant, à des journalistes venus du monde entier. « Moi, j’adore ça. J’aimerais que ça dure six mois. » Six mois à expliquer combien ce film a marqué sa vie. « Quand Frémaux a téléphoné pour dire qu’on était en compétition, j’étais comme un fou. Après, j’ai fait un nervous breakdown ! Dire que la planète entière va voir ce film ! »', NULL);
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('ACTEUR',2);
-INSERT INTO TAGS (art, word) VALUES (2,'lindon');
-INSERT INTO TAGS (art, word) VALUES (2,'vincent');
-INSERT INTO TAGS (art, word) VALUES (2,'cannes');
-INSERT INTO TAGS (art, word) VALUES (2,'palme dor');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('ACTEUR',2,'nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (2,'lindon','nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (2,'vincent','nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (2,'cannes','nf17004');
+INSERT INTO TAGS (art, word, modi) VALUES (2,'palme dor','nf17004');
 
 
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (3, '« Ex Machina » : la gynoïde est l’avenir de l’homme', 0, 0, '2015-06-02', 'nf17007', 'en_redaction');
@@ -58,13 +58,13 @@ INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (3, fOrdreBloc(3)
 INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (3, fOrdreBloc(3), 'Info','Ce moment est connu en jargon scientifique-fictif sous le nom de « singularité ». A cet instant, une « intelligence artificielle forte » (le second adjectif la distinguant de celle d’un aspirateur sans pilote ou d’une machine à laver à senseurs) surpassera l’esprit humain. Selon les calculs d’Alex Garland, on n’en est plus très loin. Son film commence au quartier général d’une multinationale du Net qui a construit sa fortune sur le Blue Book, le plus malin des moteurs de recherche. Là, un programmeur nommé Caleb (Domnhall Gleeson) apprend qu’il a remporté un concours d’entreprise qui lui permettra de rencontrer Nathan Bateman, le fondateur de l’entreprise, qui – encore adolescent – a écrit l’algorithme à l’origine de sa fortune.', NULL);
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('CINEMA',3);
-INSERT INTO TAGS (art, word) VALUES (3,'machina');
-INSERT INTO TAGS (art, word) VALUES (3,'ex');
-INSERT INTO TAGS (art, word) VALUES (3,'alicia');
-INSERT INTO TAGS (art, word) VALUES (3,'vikander');
-INSERT INTO TAGS (art, word) VALUES (3,'ava');
-INSERT INTO TAGS (art, word) VALUES (3,'futur');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('CINEMA',3,'nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'machina','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'ex','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'alicia','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'vikander','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'ava','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (3,'futur','nf17006');
 
 
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (4, 'Les pirouettes du temps', 0, 0, '2015-06-02', 'nf17007', 'en_redaction');
@@ -73,11 +73,11 @@ INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (4, fOrdreBloc(4)
 INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES (4, fOrdreBloc(4), 'Relégué aux oubliettes',' Relégué aux oubliettes, le temps où l’Ircam (Institut de recherche et coordination acoustique/musique) mitonnait dans les sous-sols de la place Igor-Stravinsky des logiciels complexes pour compositeurs érudits. Depuis quelque trois décennies, la synthèse vocale, pierre de touche de la geste ircamienne, s’est répandue comme une traînée de poudre dans les dessins animés, jeux vidéo, cinéma ou la création contemporaine. Tout s’est accéléré en 2001 avec la création de K, de Philippe Manoury, à l’Opéra de ­Paris.', NULL);
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('MUSIQUE',4);
-INSERT INTO TAGS (art, word) VALUES (4,'pirouettes');
-INSERT INTO TAGS (art, word) VALUES (4,'spectacle');
-INSERT INTO TAGS (art, word) VALUES (4,'manifeste');
-INSERT INTO TAGS (art, word) VALUES (4,'temps');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('MUSIQUE',4,'nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (4,'pirouettes','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (4,'spectacle','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (4,'manifeste','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (4,'temps','nf17002');
 
 
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (5, 'Samsung lance le Galaxy S6, son arme anti-Apple', 0, 0, '2015-06-02', 'nf17003', 'en_redaction');
@@ -94,12 +94,12 @@ Afin d’enrayer sa chute, Samsung explore une autre voie que celle de l’innov
 Ce questionnement se double aujourd’hui d’une incertitude quant à l’avenir de la gouvernance du chaebol. Lee Kun-hee, le président et fils du fondateur du groupe, est entre la vie et la mort. La question de savoir qui lui succédera parmi ses enfants n’a pas encore été tranchée. Une incertitude qui ne contribue pas à la sérénité du conglomérat.', NULL);
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('HIGH TECH',5);
-INSERT INTO TAGS (art, word) VALUES (5,'samsung');
-INSERT INTO TAGS (art, word) VALUES (5,'s6');
-INSERT INTO TAGS (art, word) VALUES (5,'galaxy');
-INSERT INTO TAGS (art, word) VALUES (5,'apple');
-INSERT INTO TAGS (art, word) VALUES (5,'anti-apple');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('HIGH TECH',5,'nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (5,'samsung','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (5,'s6','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (5,'galaxy','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (5,'apple','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (5,'anti-apple','nf17002');
 
 
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (6, 'Spéculations autour des ventes de l’Apple Watch', 0, 0, '2015-06-02', 'nf17003', 'en_redaction');
@@ -110,10 +110,10 @@ Dans une vidéo interne, Angela Ahrendts, senior vice-présidente en charge des 
 Mme Ahrendts ne donne aucune date précise. Mais le patron d’Apple, Tim Cook, avait laissé entendre que cela pourrait être en juin.', NULL);
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('HIGH TECH',6);
-INSERT INTO TAGS (art, word) VALUES (6,'apple');
-INSERT INTO TAGS (art, word) VALUES (6,'watch');
-INSERT INTO TAGS (art, word) VALUES (6,'futur');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('HIGH TECH',6,'nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (6,'apple','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (6,'watch','nf17006');
+INSERT INTO TAGS (art, word, modi) VALUES (6,'futur','nf17006');
 
 
 
@@ -124,15 +124,15 @@ Dans notre conception ordinaire de l’avenir, l’idée qu’on puisse le chang
 Ou bien l’on tient pour vraie maintenant soit la première proposition soit la seconde, ce qui ne veut pas dire que nous sachions ce qu’il en est. Dans ce cas, il n’y a rien que quiconque puisse faire entre aujourd’hui et le moment du « Grexit », s’il est vrai qu’il aura lieu, qui aurait pour conséquence qu’il n’ait pas lieu.', NULL);
 
 
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES ('ECONOMIQUE',7);
-INSERT INTO TAGS (art, word) VALUES (7,'hollande');
-INSERT INTO TAGS (art, word) VALUES (7,'futur');
-INSERT INTO TAGS (art, word) VALUES (7,'politique');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES ('ECONOMIQUE',7,'nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (7,'hollande','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (7,'futur','nf17002');
+INSERT INTO TAGS (art, word, modi) VALUES (7,'politique','nf17002');
 
 
-INSERT INTO TIE_ARTICLE (firstArticle, secondArticle) VALUES (1,2);
-INSERT INTO TIE_ARTICLE (firstArticle, secondArticle) VALUES (1,3);
-INSERT INTO TIE_ARTICLE (firstArticle, secondArticle) VALUES (5,6);
+INSERT INTO TIE_ARTICLE (firstArticle, secondArticle, modi) VALUES (1,2,'nf17002');
+INSERT INTO TIE_ARTICLE (firstArticle, secondArticle, modi) VALUES (1,3,'nf17002');
+INSERT INTO TIE_ARTICLE (firstArticle, secondArticle, modi) VALUES (5,6,'nf17002');
 
 
 INSERT INTO COMMENTAIRE(id, art, aDate, creator, texte, statut) VALUES (1, 1, '2015-05-25 11:28:00', 'nf17009', 'Très bien.', 'visible');
@@ -153,17 +153,14 @@ INSERT INTO COMMENTAIRE(id, art, aDate, creator, texte, statut) VALUES (15, 6, '
 INSERT INTO COMMENTAIRE(id, art, aDate, creator, texte, statut) VALUES (16, 7, '2015-05-30 05:11:00', 'nf17001', 'Aller! Champion !', 'visible');
 INSERT INTO COMMENTAIRE(id, art, aDate, creator, texte, statut) VALUES (17, 7, '2015-05-30 05:11:00', 'nf17005', 'C''est qui sa copine maintenant ?', 'visible');
 
-INSERT INTO NOTE (login, art, note) VALUES ('nf17009', 1, 7);
-INSERT INTO NOTE (login, art, note) VALUES ('nf17004', 1, 6);
+UPDATE COMMENTAIRE SET statut='masque', modi='nf17008' WHERE id = 2;
+UPDATE COMMENTAIRE SET statut='masque', modi='nf17008' WHERE id = 13;
 
-UPDATE COMMENTAIRE SET statut='masque' WHERE id = 2;
-UPDATE COMMENTAIRE SET statut='masque' WHERE id = 13;
-
-UPDATE ARTICLE SET statut='publie' WHERE id = 2;
-UPDATE ARTICLE SET honor=1 WHERE id = 5;
-UPDATE ARTICLE SET statut='supprime' WHERE id = 1;
-UPDATE ARTICLE SET statut='en_redaction' WHERE id = 1;
-UPDATE ARTICLE SET statut='soumis' WHERE id = 2;
-UPDATE ARTICLE SET statut='valide' WHERE id = 1;
+UPDATE ARTICLE SET statut='publie', modi='nf17002' WHERE id = 2;
+UPDATE ARTICLE SET honor=1, modi='nf17002' WHERE id = 5;
+UPDATE ARTICLE SET statut='supprime', modi='nf17002' WHERE id = 1;
+UPDATE ARTICLE SET statut='en_redaction', modi='nf17002' WHERE id = 1;
+UPDATE ARTICLE SET statut='soumis', modi='nf17002' WHERE id = 2;
+UPDATE ARTICLE SET statut='valide', modi='nf17002' WHERE id = 1;
 
 COMMIT;
