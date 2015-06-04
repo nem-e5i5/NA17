@@ -106,13 +106,23 @@ ORDER BY A.aDate; --L'author peut seulement modifier ses articles en rédaction
 
 
 -----------------LIER DEUX ARTICLES (POUR UN EDIREUR)----------------------
-INSERT INTO TIE_ARTICLE (firstArticle, secondArticle) VALUES ('$art1','$art2');
+INSERT INTO TIE_ARTICLE (firstArticle, secondArticle,modi) VALUES ('$art1','$art2','$currentLogin');
 
 
 
 
 -----------------CREATION D'UN ARTICLE (POUR UN AUTEUR)--------------------------------
 INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (nextval('idauto_art'), '$newTitle', 0, 0, current_date, '$currentLogin', 'en_redaction');
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -195,7 +205,7 @@ SELECT secondArticle FROM TIE_ARTICLE T WHERE T.firstArticle='$currentArt');
 INSERT INTO COMMENTAIRE(id, art, aDate, creator, texte, statut) VALUES(nextval('idauto_comm'), '$currentArt', current_timestamp ,'$currentLogin', '$newComm', 'visible');
 
 --SUPPRIMER SES COMMENTAIRE
-UPDATE COMMENTAIRE SET statut='supprime' WHERE id='$currentComm' AND creator='$currentLogin';
+UPDATE COMMENTAIRE SET statut='supprime', modi='$currentLogin' WHERE id='$currentComm'AND creator='$currentLogin';
 
 --LIRE DES COMMENTAIRES(NON MASQUE) DES AUTRES
 --CONDITION pour lecteur : non masque : (statut = 'exergue' OR statut = 'visible') !!
@@ -209,23 +219,23 @@ ORDER BY aDate;
 
 
 ----------------POUR UN MODERATEUR
-UPDATE COMMENTAIRE SET statut='supprime' WHERE id='$currentComm';
-UPDATE COMMENTAIRE SET statut='visible' WHERE id='$currentComm';
-UPDATE COMMENTAIRE SET statut='exergue' WHERE id='$currentComm';
-UPDATE COMMENTAIRE SET statut='masque' WHERE id='$currentComm';
+UPDATE COMMENTAIRE SET statut='supprime', modi='$currentLogin' WHERE id='$currentComm';
+UPDATE COMMENTAIRE SET statut='visible', modi='$currentLogin' WHERE id='$currentComm';
+UPDATE COMMENTAIRE SET statut='exergue', modi='$currentLogin' WHERE id='$currentComm';
+UPDATE COMMENTAIRE SET statut='masque', modi='$currentLogin' WHERE id='$currentComm';
 
 
 
 ---------------- POUR UN AUTEUR
 
 --SUPPRIMER UN ARTICLE--
-UPDATE ARTICLE SET statut='supprime' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='supprime', modi='$currentLogin' WHERE id='$currentArt';
 
 --RECUPERER UN ARTICLE SUPPRIME--
-UPDATE ARTICLE SET statut='en_redaction' WHERE id='$currentArt' AND statut='supprime';
+UPDATE ARTICLE SET statut='en_redaction', modi='$currentLogin' WHERE id='$currentArt' AND statut='supprime';
 
 --SOUMETTRE UN ARTICLE--
-UPDATE ARTICLE SET statut='soumis' WHERE id='$currentArt' AND statut='en_redaction';
+UPDATE ARTICLE SET statut='soumis', modi='$currentLogin' WHERE id='$currentArt' AND statut='en_redaction';
 
 
 ---------------- POUR UN EDITEUR
@@ -243,27 +253,27 @@ ORDER BY aDate;
 
 
 --ASSOCIER UN STATUT A CHAQUE ARTICLE
-UPDATE ARTICLE SET statut='en_redaction' WHERE id='$currentArt';
-UPDATE ARTICLE SET statut='en_relecture' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='en_redaction', modi='$currentLogin' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='en_relecture', modi='$currentLogin' WHERE id='$currentArt';
 
-UPDATE ARTICLE SET statut='rejete' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='rejete', modi='$currentLogin' WHERE id='$currentArt';
 --demande une justification si rejete
 UPDATE ARTICLE SET justification='$newJustification' WHERE id='$currentArt';
 
-UPDATE ARTICLE SET statut='a_reviser' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='a_reviser', modi='$currentLogin' WHERE id='$currentArt';
 --demande une preconisation si a_reviser
 INSERT INTO PRECONISATION (art, aDate, editor, texte) VALUES ('$currentArt', current_timestamp, '$currentLogin', 'newPreconisation');
 
 
 --AJOUTER DES MOTS CLES
-INSERT INTO TAGS (art, word) VALUES('$currentArt', '$newTag');
+INSERT INTO TAGS (art, word, modi) VALUES('$currentArt', '$newTag', '$currentLogin');
 
 
 
 
 ------------------------------------------------------PAGE DU BLOC-----------------------------------------------------------------
 --corriger des blocs (EDITEUR)
-UPDATE BLOC SET texte ='$newText' AND title = '$newText' WHERE art='$currentArt' AND aOrder='$currentOrder';
+UPDATE BLOC SET texte ='$newText', title = '$newText', modi='$currentLogin' WHERE art='$currentArt' AND aOrder='$currentOrder';
 
 --insérer un bloc (AUTEUR)
 --SI BLOC DE TEXT
@@ -282,17 +292,17 @@ INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES ('$currentArt', f
 INSERT INTO RUBRIQUE (title, mother, creator, aDate) VALUES ( '$newTitle', '$mother', '$currentLogin', current_timestamp);
 
 --ASSOCIER DES ARTICLES A UNE RUBRIQUES
-INSERT INTO RUBRIQUE_ARTICLE (rub, art) VALUES('$rubriqueVoulu','$currentArt');
+INSERT INTO RUBRIQUE_ARTICLE (rub, art, modi) VALUES('$rubriqueVoulu','$currentArt', '$currentLogin');
 
 --SELECTIONNER PARMI DES ARTICLES VALIDES CEUX QUI SONT PUBILIE SUR LE SITE
 SELECT id, title, honor, aDate, author, statut
 FROM ARTICLE
 WHERE statut='valide';
 
-UPDATE ARTICLE SET statut='publie' WHERE id='$currentArt';
+UPDATE ARTICLE SET statut='publie', modi='$currentLogin' WHERE id='$currentArt';
 
 --PROPOSER UNE CATEGORIE A L'HONNEUR
-UPDATE ARTICLE SET honor=1 WHERE id='$currentArt';
+UPDATE ARTICLE SET honor=1, modi='$currentLogin' WHERE id='$currentArt';
 
 
 
