@@ -180,7 +180,7 @@ FROM ARTICLE A, TUSER U
 WHERE A.id='$currentArt' AND A.author=U.login;
 
 ----afficher des blocs par ordre
-SELECT art, aOrder, title, texte, image_uml
+SELECT art, aOrder, type, title, texte, image_uml
 FROM BLOC
 WHERE art='$currentArt' 
 ORDER BY aOrder;
@@ -277,9 +277,9 @@ UPDATE BLOC SET texte ='$newText', title = '$newText', modi='$currentLogin' WHER
 
 --insérer un bloc (AUTEUR)
 --SI BLOC DE TEXT
-INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES ('$currentArt', fOrdreBloc($currentArt), '$titleBloc', '$nexText' , NULL);
+INSERT INTO BLOC (art, aOrder, type, title, texte, image_uml) VALUES ('$currentArt', fOrdreBloc($currentArt), 'T', '$titleBloc', '$nexText' , NULL);
 --SI BLOC D'IMAGE
-INSERT INTO BLOC (art, aOrder, title, texte, image_uml) VALUES ('$currentArt', fOrdreBloc($currentArt), '$titleBloc', NULL, '$newUml');
+INSERT INTO BLOC (art, aOrder, type, title, texte, image_uml) VALUES ('$currentArt', fOrdreBloc($currentArt), 'I','$titleBloc', NULL, '$newUml');
 
 
 
