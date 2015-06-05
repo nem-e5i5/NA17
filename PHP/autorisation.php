@@ -56,7 +56,7 @@ $vConn = fConnect();
 	
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		if (!empty($_POST["login"]) and !empty($_POST["droit"])){
-			$login=$_POST["login"];$succes=1;
+			$login=$_POST["login"];
 			$droit=$_POST["droit"];
 			$vSql ="UPDATE TUSER SET droit = '$droit' WHERE login = '$login';";
 			$vQuery=pg_query($vConn,$vSql);
