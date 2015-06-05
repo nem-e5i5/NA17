@@ -68,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$vQuery=pg_query($vConn,$vSql);
 	}
 	if($succes1==1 && $succes2==1){Header("Location: acceuil.php?login=".$login);}
+
 ?>
 
 <h2>Creer un nouveau compte</h2>
@@ -84,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    <span class="error">* <?php echo $mdpErr;?></span>
    <br><br>
    <input type="submit" name="submit" value="Submit">
+   <p><a href="acceuil.php">Retour</a></p>
 </form>
 </body>
 </html>
