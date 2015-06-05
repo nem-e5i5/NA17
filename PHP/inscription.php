@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 	else {
 	    if (!ctype_alnum($login)){
-		$loginErr = "Que des lettres et chiffres, s'il vous plait";
+		$loginErr = "Que des lettres et chiffres, s'il vous plait</font>";
 	    }
 	    else{
 		$vSql ="SELECT login FROM TUSER WHERE login= '$login';";
@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$vQuery=pg_query($vConn,$vSql);
 	}
 	if($succes1==1 && $succes2==1){Header("Location: acceuil.php?login=".$login);}
-
+pg_close($vConn);
 ?>
 
 <h2>Creer un nouveau compte</h2>
