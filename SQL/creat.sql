@@ -67,11 +67,13 @@ CREATE TABLE RUBRIQUE_ARTICLE(
 CREATE TABLE BLOC(
 	art INTEGER REFERENCES ARTICLE(id),
 	aOrder INTEGER,
+	type CHAR(1),
 	title VARCHAR(200) NOT NULL,
 	texte TEXT,
 	image_uml VARCHAR(200),
 	modi VARCHAR(30) REFERENCES TUSER(login),
 	CHECK((texte IS NOT NULL) OR (image_uml IS NOT NULL) ),
+	CHECK (type IN ('T', 'I')),
 	PRIMARY KEY(art, aOrder)
 );
 
