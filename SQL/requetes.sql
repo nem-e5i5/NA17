@@ -6,7 +6,6 @@
 --LA LISTE DE TOUS LES ARTICLES
 SELECT A.id, A.title, A.honor, A.aDate, A.author, U.firstname, U.lastname, A.statut--Il faut vérifier que le statut='pubilie' pour les lecteur!!!
 FROM ARTICLE A, TUSER U
-WHERE A.author=U.login
 ORDER BY A.aDate;
 
 
