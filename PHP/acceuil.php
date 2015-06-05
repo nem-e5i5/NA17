@@ -12,6 +12,7 @@ include "function.php";
 		if (!isset($_SESSION["user"])) {$_SESSION["user"] = "no";}
 		if(!isset($login)){$login="visiteur"; }
 		}
+	$nodroit=($_SESSION["user"]=="lecteur" or $_SESSION["user"]=="moderateur" or $_SESSION["user"]=="no");
 ?>
 
 <html>
@@ -69,9 +70,10 @@ include "function.php";
 			<td width="100pt">
 				<b>Date</b>
 			</td>	
-			<td width="100pt">
+<?php	if(!$nodroit)  {echo"<td width='100pt'>
 				<b>Statut</b>
-			</td>			
+			</td>";}
+?>			
 		</tr>
 
 <?php 
@@ -81,14 +83,16 @@ include "function.php";
 		ORDER BY A.aDate;";
 	$vQuery=pg_query($vConn,$vSql);
 	while ($vResult = pg_fetch_array($vQuery)){
-	echo "<tr>";
-	echo "<td> <a href='article.php?article="."$vResult[id]"."'>"."$vResult[title]"."</td>";
-	echo "<td>$vResult[honor]</td>";
-	echo "<td>$vResult[firstname]"." "."$vResult[lastname]"."</td>";
-	/*echo "<td>$vResult[lastname]</td>";*/
-	echo "<td>$vResult[date]</td>";
-	echo "<td>$vResult[statut]</td>";
-	echo "</tr>";
+		if(($nodroit and $vResult['statut']!="publie") or !$nodroit) {
+			echo "<tr>";
+			echo "<td> <a href='article.php?article="."$vResult[id]"."'>"."$vResult[title]"."</td>";
+			echo "<td>$vResult[honor]</td>";
+			echo "<td>$vResult[firstname]"." "."$vResult[lastname]"."</td>";
+			echo "<td>$vResult[date]</td>";
+			if(!$nodroit)
+			{echo "<td>$vResult[statut]</td>";}
+			echo "</tr>";
+		}
 	}
 ?> 
 </body>
