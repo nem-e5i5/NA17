@@ -4,7 +4,7 @@ CREATE TABLE TUSER(
 	login VARCHAR(30) PRIMARY KEY,
 	firstName VARCHAR(20),
 	lastName VARCHAR(20),
-	aPassword CHAR(8) NOT NULL,
+	aPassword VARCHAR(100) NOT NULL,
 	droit VARCHAR(20) NOT NULL,
 	CHECK (droit IN ('administrateur', 'editeur', 'auteur', 'lecteur', 'moderateur'))
 );
