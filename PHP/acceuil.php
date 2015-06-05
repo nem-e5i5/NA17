@@ -38,13 +38,16 @@ include "function.php";
 		$vQuery=pg_query($vConn,$vSql);
 		$vResult = pg_fetch_array($vQuery);
 		if($vResult['login']==NULL){
-			echo"<br><font size='3' color='red'>Le login ou le mot de passe n''est pas correct</span></font>";
+			echo"<br><font size='3' color='red'>Le login ou le mot de passe n''est pas correct</font>";
 	    	}
 		else{Header("Location: acceuil.php?login=".$nlogin);}
 		}
 	}
 ?> 
 
+<?php
+	if($_SESSION["user"]=="administrateur") {echo "<br><a href='autorisation.php'> Autoriser des utilisateurs </a>";}
+?>
 	
 </nav>
 <head>
@@ -94,6 +97,7 @@ include "function.php";
 			echo "</tr>";
 		}
 	}
+pg_close($vConn);
 ?> 
 </body>
 </html>
