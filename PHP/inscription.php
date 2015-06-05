@@ -1,10 +1,8 @@
- <!DOCTYPE HTML>
 <html>
-<head>
+<head><title>Inscription</title></head>
 <style>
 .error {color: #FF0000;}
 </style>
-</head>
 <body>
 
 <?php
@@ -27,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      }
      else {
 	if(strlen($login)<7){
-	   $loginErr = "Plus de 7 caracteres, s'il vous plait";
+	   $loginErr = "Au moins 7 caracteres, s'il vous plait";
 	}
 	else {
 	    if (!ctype_alnum($login)){
@@ -82,9 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    <br><br>
    Prenom: <input type="text" name="prenom" value="<?php echo $prenom;?>">
    <br><br>
-   Mot de passe: <input type="text" name="mdp" value="<?php echo $mdp;?>">
+   Mot de passe: <input type="password" name="mdp" value="<?php echo $mdp;?>">
    <span class="error">* <?php echo $mdpErr;?></span>
-   <br><br><?php echo"$succes1 , $succes2"?>
+   <br><br>
    <input type="submit" name="submit" value="Submit">
 </form>
 </body>
