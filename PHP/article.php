@@ -39,9 +39,9 @@
 //Afficher les Blocs
 	$nbbloc=$vResult["nb"];
 	if($nbbloc>0){
-		$vSql =	"SELECT art, aOrder AS order, type, title, texte, image_uml AS uml
+		$vSql =	"SELECT art, aOrder AS order, type, title, texte, image_uml AS uml, justification
 				FROM BLOC
-				WHERE art='".$_SESSION["art"]."' 
+				WHERE art=".$_SESSION["art"]."
 				ORDER BY aOrder;";
 		$vQuery=pg_query($vConn,$vSql);
 		while($vResult = pg_fetch_array($vQuery)){
@@ -62,14 +62,17 @@
 //Les fonctionnements d'editeur
 	if($editeurdroit){
 		if($statut=="rejete"){
-			
-			
+			echo "<br><b>Justification pour rejeter</b><br>";
+			echo "$vResult[justification]<br>";
 		};
 		
 		if($statut=="a_reviser"){
-			
-			
+			echo "<br><b>Préconisation pour réviser</b><br>";
+			$vSql =	"SELECT texte FROM BLOC WHERE art=".$_SESSION["art"]." ORDER BY aDate;";
+			echo "$vResult[texte]<br>";
 		};
+		
+		
 	}
 
 
@@ -109,7 +112,7 @@
 //Ajouter un commentaire
 
 
-//DES ARTICLE LIES
+//Des articles lies
 	echo "<h2>-------------DES ARTICLE LIES-------------</h2>";
 	$vSql =	"SELECT A.id, A.title, A.statut
 			FROM ARTICLE A
