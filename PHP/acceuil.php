@@ -40,6 +40,10 @@ include "function.php";
 		$auteurin= $_GET["auteurin"];
 	}
 
+	$statutin="";
+	if(!empty($_GET["statutin"])){
+		$statutin= $_GET["statutin"];
+	}
 
 ?>
 
@@ -90,7 +94,9 @@ include "function.php";
 	<a href="liste.php?choix=date">Date</a><br>
 	<a href="liste.php?choix=auteur">Auteur</a><br>
 	<a href="acceuil.php?honor=1">Honor</a><br>
-	
+<?php
+	if(!$nodroit) echo"<a href='liste.php?choix=statut'>Statut</a><br>";
+?>
 	<form method="post"> <font color="blue">mot clé</font> : <input list="motcles" name="motcles"/>
 
 	<datalist id="motcles">
@@ -149,7 +155,7 @@ include "function.php";
 
 <?php
 
-	if($motclein=="" and $rubriquein=="" and $datein=="" and $auteurin==""){
+	if($motclein=="" and $rubriquein=="" and $datein=="" and $auteurin=="" and $statutin==""){
 	$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
 		FROM ARTICLE A, TUSER U
 		WHERE A.author=U.login
@@ -178,6 +184,12 @@ include "function.php";
 			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
 				FROM ARTICLE A, TUSER U
 				WHERE A.author=U.login AND A.author='".$auteurin."';";}
+
+		if($statutin!=""){
+			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
+				FROM ARTICLE A, TUSER U
+				WHERE A.statut = '".$statutin."' AND A.author=U.login
+				ORDER BY A.aDate;";}
 
 	};
 
