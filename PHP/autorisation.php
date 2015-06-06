@@ -2,13 +2,11 @@
 <head><title>Autorisation</title></head>
 <body>
 <h2>Autoriser un utilisateur</h2>
-<p><a href="acceuil.php">Retour</a></p>
 <?php
 include "connect.php";
 $vConn = fConnect();
 ?>
-	<p>
-	<table border="1">
+	<p><table border="1">
 		<tr>
 			<td width="100pt">
 				<b>Login</b>
@@ -38,19 +36,20 @@ $vConn = fConnect();
 			</td>";
 		echo "</tr>";
 	}
-	echo "</p>";
-	echo"
-	<p><select name='droit'>
-	<option value='administrateur'>Administrateur</option> 
-	<option value='editeur' selected>Editeur</option>
-	<option value='auteur'>Auteur</option>
-	<option value='lecteur'>Lecteur</option>
-	<option value='moderateur'>Moderateur</option>
+	
+?>
+	</table>
+	
+	<p><select name="droit">
+	<option value="administrateur">Administrateur</option> 
+	<option value="editeur">Editeur</option>
+	<option value="auteur">Auteur</option>
+	<option value="lecteur"selected>Lecteur</option>
+	<option value="moderateur">Moderateur</option>
 	</select>
 
-	<input type='submit' name='submit' value='Autoriser'> 
-	</form></p>";
-?>
+	<input type="submit" name="submit" value="Autoriser" /> 
+	</form></p>
 
 <?php
 	
@@ -66,6 +65,6 @@ $vConn = fConnect();
 	}
 pg_close($vConn);
 ?>
-
+<p><a href="acceuil.php">Retour</a></p>
 </body>
 </html>
