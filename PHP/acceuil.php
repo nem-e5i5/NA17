@@ -246,7 +246,7 @@ include "function.php";
 				else {
 					$vSql ="INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (nextval('idauto_art'), '".$ntitle."', 0, 0, current_date, '".$_SESSION['login']."', 'en_redaction');";
 					$vQuery=pg_query($vConn,$vSql);
-					$vSql ="SELECT id FROM ARTICLE WHERE title ='".$ntitle".'";
+					$vSql ="SELECT id FROM ARTICLE WHERE title ='".$ntitle."';";
 					$vQuery=pg_query($vConn,$vSql);
 					$vResult = pg_fetch_array($vQuery);
 					$nid=$vResult["id"];
