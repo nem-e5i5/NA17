@@ -47,7 +47,7 @@ $vConn = fConnect();
 				}
 				echo "</table>";
 			}
-	elseif($choix=="rubrique"){ //Il existe un probleme
+	elseif($choix=="rubrique"){
 				$vSql ="SELECT title FROM RUBRIQUE WHERE mother IS NULL;";
 				$vQuery=pg_query($vConn,$vSql);
 				while ($vResult = pg_fetch_array($vQuery)){
@@ -60,7 +60,23 @@ $vConn = fConnect();
 					}						
 						
 				}
-			};
+			}
+	elseif($choix=="statut"){echo"
+				<p><table border='1'><tr>
+				<td width='200pt'><b>Statut</b></td>
+				<td width='100pt'><b>Nombre d'articles</b></td></tr>";
+				$vSql ="SELECT statut, COUNT(*) AS nb FROM ARTICLE GROUP BY statut ORDER BY statut;";
+				$vQuery=pg_query($vConn,$vSql);
+				while ($vResult = pg_fetch_array($vQuery)){
+					echo "<tr>";
+					echo "<td><a href='acceuil.php?statutin="."$vResult[statut]"."'>"."$vResult[statut]"."</td>";
+					echo "<td>$vResult[nb]</td>";
+					echo "</tr>";
+				}
+				echo "</table>";
+
+
+		}
 
 
 
