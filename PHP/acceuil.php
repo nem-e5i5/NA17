@@ -24,6 +24,23 @@ include "function.php";
 	if(!empty($_GET["motclein"])){
 		$motclein= $_GET["motclein"];
 	}
+
+	$rubriquein="";
+	if(!empty($_GET["rubriquein"])){
+		$rubriquein= $_GET["rubriquein"];
+	}
+
+	$datein="";
+	if(!empty($_GET["datein"])){
+		$datein= $_GET["datein"];
+	}
+
+	$auteurin="";
+	if(!empty($_GET["auteurin"])){
+		$auteurin= $_GET["auteurin"];
+	}
+
+
 ?>
 
 <html>
@@ -70,8 +87,8 @@ include "function.php";
 	<h2>Voir par</h2>
 	<a href="acceuil.php">Tous les articles</a><br>
 	<a href="liste.php?choix=rubrique">Rubrique</a><br>
-	<a href="liste.php?choix='date'">Date</a><br>
-	<a href="liste.php?choix='auteur'">Auteur</a><br>
+	<a href="liste.php?choix=date">Date</a><br>
+	<a href="liste.php?choix=auteur">Auteur</a><br>
 	<a href="acceuil.php?honor=1">Honor</a><br>
 	
 	<form method="post"> <font color="blue">mot clé</font> : <input list="motcles" name="motcles"/>
@@ -130,19 +147,40 @@ include "function.php";
 ?>			
 		</tr>
 
-<?php 
-	if($motclein==""){
+<?php
+
+	if($motclein=="" and $rubriquein=="" and $datein=="" and $auteurin==""){
 	$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
 		FROM ARTICLE A, TUSER U
 		WHERE A.author=U.login
 		ORDER BY A.aDate, A.id;";
 	}
 	else{
-	$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
-		FROM ARTICLE A, TUSER U, TAGS T
-		WHERE A.author=U.login AND T.art=A.id AND T.word='".$motclein."'
-		ORDER BY A.aDate, A.id;";
+		if($motclein!=""){
+			$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
+			FROM ARTICLE A, TUSER U, TAGS T
+			WHERE A.author=U.login AND T.art=A.id AND T.word='".$motclein."'
+			ORDER BY A.aDate, A.id;";}
+
+		if($rubriquein!=""){
+			$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
+			FROM ARTICLE A, RUBRIQUE_ARTICLE RA, TUSER U
+			WHERE A.id=RA.art AND RA.rub='".$rubriquein."' AND A.author=U.login
+			ORDER BY A.aDate;";}
+
+		if($datein!=""){
+			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
+				FROM ARTICLE A, TUSER U
+				WHERE A.aDate = to_date('".$datein."', 'YYYY-MM-DD') AND A.author=U.login
+				ORDER BY aDate;";}
+
+		if($auteurin!=""){
+			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
+				FROM ARTICLE A, TUSER U
+				WHERE A.author=U.login AND A.author='".$auteurin."';";}
+
 	};
+
 	$vQuery=pg_query($vConn,$vSql);
 	while ($vResult = pg_fetch_array($vQuery)){
 		if(($nodroit and $vResult['statut']!="publie") or !$nodroit) {
@@ -193,9 +231,9 @@ include "function.php";
 	};
 	
 	if($_SESSION["user"]=="auteur"){
-		echo "<br><font size='5'>Creer un nouveau article</font>";
+		echo "<h2>Creer un nouveau article</h2>";
 		echo"<form method='post'> 
-			titre: <input type='text' name='ntitle' value=''>
+			Titre: <input type='text' name='ntitle' value=''>
  			 <input type='submit' name='submitntitle' value='Creer'/></from>";
  			 
  		if($_SERVER["REQUEST_METHOD"] == "POST" and isset($_POST["submitntitle"])) {
@@ -208,7 +246,11 @@ include "function.php";
 				else {
 					$vSql ="INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (nextval('idauto_art'), '".$ntitle."', 0, 0, current_date, '".$_SESSION['login']."', 'en_redaction');";
 					$vQuery=pg_query($vConn,$vSql);
-					Header("Location: article.php");
+					$vSql ="SELECT id FROM ARTICLE WHERE title ='".$ntitle".'";
+					$vQuery=pg_query($vConn,$vSql);
+					$vResult = pg_fetch_array($vQuery);
+					$nid=$vResult["id"];
+					Header("Location: article.php?article=".$nid);
 				};
 			}
 			else echo "<br><font size='3' color='red'>Le titre ne doit pas être nuls</font>";
