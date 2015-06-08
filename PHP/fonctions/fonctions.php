@@ -8,6 +8,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion, $sql);
 	$resultat=pg_fetch_array($query);
 	return $resultat;
+}
 	
 	
 	function get_tags ($articleId){
@@ -18,6 +19,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion, $sql);
 	$resultat=pg_fetch_array($query);
 	return $resulat;
+	}
 	
 	
 	function get_ties($articleId){
@@ -31,6 +33,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion, $sql);
 	$resultat=pg_fetch_array($query);
 	return $resultat;
+	}
 	
 	
 	
@@ -49,6 +52,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion, $sql);
 	$resultat=pg_fetch_array($query);
 	return $resultat;
+	}
 	
 	
 	function get_commentaires($articleId){
@@ -59,6 +63,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion,$sql);
 	$resultat=pg_fetch_array($query);
 	return $resultat;
+	}
 	
 	function user_exists($login,$password){
 				global $connexion;
@@ -68,6 +73,7 @@ function get_blocs($articleId){
 	$query=pg_query($sql);
 	$resultat=pg_fetch_array($query);
 	return $resultat['login'];	
+	}
 	
 	function user_droit($user){
 				global $connexion;
@@ -75,7 +81,7 @@ function get_blocs($articleId){
 	$query=pg_query($sql);
 	$Resultat=pg_fetch_array($query);
 	return $resulat['droit'];
-	
+	}
 	
 	function get_articles($id){
 				global $connexion;
@@ -85,6 +91,7 @@ function get_blocs($articleId){
 	$query=pg_query($connexion, $sql);
 	$resultat=pg_fetch_array($query);
 	return $resulat;
+	}
 	
 	
 	function ajouter_commentaire ($posteur, $articleId, $texte){
@@ -102,5 +109,5 @@ function get_blocs($articleId){
 	from Article
 	order by id limit ".$nombre." offset ".$commence." ;"
 		
-}
+	}
 }
