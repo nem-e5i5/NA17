@@ -95,6 +95,9 @@ include "function.php";
 	<a href="liste.php?choix=auteur">Auteur</a><br>
 	<a href="acceuil.php?honor=1">Honor</a><br>
 <?php
+	if($_SESSION["user"]=="auteur") echo "<a href='acceuil.php?auteurin="."$_SESSION[login]'>La liste de mes articles</a><br>";
+?>
+<?php
 	if(!$nodroit) echo"<a href='liste.php?choix=statut'>Statut</a><br>";
 ?>
 	<form method="post"> <font color="blue">mot clé</font> : <input list="motcles" name="motcles"/>
@@ -165,37 +168,37 @@ include "function.php";
 		if($motclein!=""){
 			$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
 			FROM ARTICLE A, TUSER U, TAGS T
-			WHERE A.author=U.login AND T.art=A.id AND T.word='".$motclein."'
+			WHERE A.author=U.login AND T.art=A.id AND T.word='$motclein'
 			ORDER BY A.aDate, A.id;";}
 
 		if($rubriquein!=""){
-			$vSql ="SELECT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
+			$vSql ="SELECT DISTINCT A.id, A.title, A.honor, A.aDate AS date, A.author, U.firstname, U.lastname, A.statut
 			FROM ARTICLE A, RUBRIQUE_ARTICLE RA, TUSER U
-			WHERE A.id=RA.art AND RA.rub='".$rubriquein."' AND A.author=U.login
+			WHERE A.id=RA.art AND A.author=U.login AND (RA.rub='$rubriquein' OR RA.rub IN(SELECT title FROM RUBRIQUE WHERE mother = '$rubriquein'))
 			ORDER BY A.aDate;";}
 
 		if($datein!=""){
 			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
 				FROM ARTICLE A, TUSER U
-				WHERE A.aDate = to_date('".$datein."', 'YYYY-MM-DD') AND A.author=U.login
+				WHERE A.aDate = to_date('$datein', 'YYYY-MM-DD') AND A.author=U.login
 				ORDER BY aDate;";}
 
 		if($auteurin!=""){
 			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
 				FROM ARTICLE A, TUSER U
-				WHERE A.author=U.login AND A.author='".$auteurin."';";}
+				WHERE A.author=U.login AND A.author='$auteurin';";}
 
 		if($statutin!=""){
 			$vSql ="SELECT A.id, A.title, U.firstName, U.lastname, A.aDate AS date, A.honor, A.statut
 				FROM ARTICLE A, TUSER U
-				WHERE A.statut = '".$statutin."' AND A.author=U.login
+				WHERE A.statut = '$statutin' AND A.author=U.login
 				ORDER BY A.aDate;";}
 
 	};
 
 	$vQuery=pg_query($vConn,$vSql);
 	while ($vResult = pg_fetch_array($vQuery)){
-		if(($nodroit and $vResult['statut']!="publie") or !$nodroit) {
+		if(($nodroit and $vResult['statut']=="publie") or !$nodroit) {
 			if(($honor and $vResult['honor']==1)or !$honor){
 				echo "<tr>";
 				echo "<td>$vResult[id]</td>";
@@ -225,12 +228,12 @@ include "function.php";
 				$art1=$_POST["art1"]; 
 				$art2=$_POST["art2"];
 				if($art1<$art) {
-					$vSql ="SELECT modi FROM TAGS WHERE firstArticle=".$art1." AND secondArticle=".$art2.";";
+					$vSql ="SELECT modi FROM TAGS WHERE firstArticle=$art1 AND secondArticle=$art2;";
 					$vQuery=pg_query($vConn,$vSql);
 					$vResult = pg_fetch_array($vQuery);
 					if ($vResult["modi"]!=NULL) echo "<br><font size='3' color='red'>Articles deja lies</font>";
 					else{
-						$vSql ="INSERT INTO TIE_ARTICLE(firstArticle, secondArticle,modi) VALUES (".$art1.",".$art2.",'".$_SESSION['login']."');";
+						$vSql ="INSERT INTO TIE_ARTICLE(firstArticle, secondArticle,modi) VALUES ($art1,$art2,'$_SESSION[login]');";
 						$vQuery=pg_query($vConn,$vSql);
 						echo "<br><font size='3' color='red'>Articles lies avec succes</font>";
 						//Header("Location: acceuil.php");
@@ -256,9 +259,9 @@ include "function.php";
 				$vResult = pg_fetch_array($vQuery);
 				if($vResult["title"]=NULL) echo "<br><font size='3' color='red'>Le titre existe deja</font>";
 				else {
-					$vSql ="INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (nextval('idauto_art'), '".$ntitle."', 0, 0, current_date, '".$_SESSION['login']."', 'en_redaction');";
+					$vSql ="INSERT INTO ARTICLE (id, title, nbBloc, honor, aDate, author, statut) VALUES (nextval('idauto_art'), '$ntitle', 0, 0, current_date, '$_SESSION[login]', 'en_redaction');";
 					$vQuery=pg_query($vConn,$vSql);
-					$vSql ="SELECT id FROM ARTICLE WHERE title ='".$ntitle."';";
+					$vSql ="SELECT id FROM ARTICLE WHERE title ='$ntitle';";
 					$vQuery=pg_query($vConn,$vSql);
 					$vResult = pg_fetch_array($vQuery);
 					$nid=$vResult["id"];
