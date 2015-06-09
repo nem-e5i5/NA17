@@ -1,43 +1,39 @@
-<?php include ('include/format_article.php');
+<?php 
+include "connect.php";
+$vConn = fConnect();
 
-function affiche_commentaire($commentaire)
-{
-	?>
-<div>
-	<h3><small>écrit par <?php echo $commentaire["creator"];?></small></h3>
-	<div>
-		<pre><?php echo $commentaire["texte"];?></pre>
-	</div>
-	<a href="?supprimer=<?php echo $commentaire["id"];?>">supprimer le commentaire</a>
-</div>
-	<?php
-}
+	ob_start();
+	session_start(); 
 
-if (isset($_GET["article"]) || isset($_POST["article"])
-{
-	afficher_article(get_article($id));
-	$id = isset($_GET["article"]) ? $_GET["article"] : $_POST["article"];
-	if (isset($_POST["text"]))
-	{
-		$posteur = $_POST["text"];
-		$texte = $_POST["text"];
-		ajouter_commentaire($posteur, $id, $texte);
-		echo "<span>commentaire ajouté</span>"
+	$action="";
+	if(!empty($_GET["action"])){
+		$action= $_GET["action"];
 	}
 	
-	
-	foreach (get_commentaires($id) as $commentaire) affiche_commentaire($commentaire);
-	?>
-	<div>
-		<form method="post" action="comment.php">
-			<input type="text" value="pseudo" name="pseudo"/>
-			<input type="hidden" value="<?php echo $id; ?>" name="article"/>
-			<edit name="text">
-				
-			</edit>
-			<input type="submit" value="envoyer" />
-		</form>
-	</div>
-	<?php
-}
+	$id=0;
+	if(!empty($_GET["id"])){
+		$id= $_GET["id"];
+	}
+
+	if($action!="" and $id!=""){
+		if($action=="supprimer"){
+			$vSql =	"UPDATE COMMENTAIRE SET statut='supprime', modi='$_SESSION[login]' WHERE id=$id;";
+		};
+
+		if($action=="masquer"){
+			$vSql =	"UPDATE COMMENTAIRE SET statut='masque', modi='$_SESSION[login]' WHERE id=$id;";
+		};
+
+		if($action=="exergue"){
+			$vSql =	"UPDATE COMMENTAIRE SET statut='exergue', modi='$_SESSION[login]' WHERE id=$id;";
+		};
+
+		if($action=="recuperer"){
+			$vSql =	"UPDATE COMMENTAIRE SET statut='visible', modi='$_SESSION[login]' WHERE id=$id;";
+		};
+	$vQuery=pg_query($vConn,$vSql);
+	}
+	Header("Location:article.php");
+
+pg_close($vConn);
 ?>
