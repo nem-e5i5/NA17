@@ -15,7 +15,7 @@ $vConn = fConnect();
 	if($choix=="auteur"){	echo"
 				<p><table border='1'><tr>
 				<td width='300pt'><b>Liste</b></td>
-				<td width='100pt'><b>Nombre d'articles</b></td></tr>";
+				<td width='100pt'><b>Nombre d'articles</b></td></tr>";s
 					
 				$vSql ="SELECT A.author, U.firstName, U.lastname, COUNT(*) AS nb
 					FROM ARTICLE A, TUSER U
@@ -54,9 +54,8 @@ $vConn = fConnect();
 					echo "<td><b><br><br><a href='acceuil.php?rubriquein="."$vResult[title]"."'>"."$vResult[title]"."</b></td>";
 					$vSql2 ="SELECT title FROM RUBRIQUE WHERE mother='"."$vResult[title]"."';";
 					$vQuery2=pg_query($vConn,$vSql2);
-					$vResult2 = pg_fetch_array($vQuery2);
 					while($vResult2 = pg_fetch_array($vQuery2)){
-						echo "<td><br><a href='acceuil.php?rubriquein="."$vResult2[title]"."'>"."$vResult2[title]"."</td>";
+						echo "<td><br><a href='acceuil.php?rubriquein="."$vResult2[title]"."'>".$vResult2["title"]."</td>";
 					}						
 						
 				}
