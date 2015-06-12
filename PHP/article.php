@@ -321,14 +321,17 @@
 				}
 				else{
 					$note=$_POST["note"];
-					if($vResult["note"]==NULL){
-						$vSql =	"INSERT INTO NOTE(art, noteur, note) VALUES($_SESSION[art], '$_SESSION[login]',$note );";
+					if(is_int($note) and $note<=10 and $note>=1){
+						if($vResult["note"]==NULL){
+							$vSql =	"INSERT INTO NOTE(art, noteur, note) VALUES($_SESSION[art], '$_SESSION[login]',$note );";
 
-					}else{
-						$vSql =	"UPDATE NOTE SET note = $note WHERE art=$_SESSION[art] AND noteur= '$_SESSION[login];";
-					};
-					$vQuery=pg_query($vConn,$vSql);
-					Header("Location:article.php");
+						}else{
+							$vSql =	"UPDATE NOTE SET note = $note WHERE art=$_SESSION[art] AND noteur= '$_SESSION[login]';";
+						};
+						$vQuery=pg_query($vConn,$vSql);
+						Header("Location:article.php");
+					}
+					else echo "<font size='2' color='red'>Saisissez une note valable, s'il vous plaît !</font><br>";
 				};
 			
 			};
