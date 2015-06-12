@@ -200,7 +200,7 @@
 			echo "<form method='post' action=''> <input type='submit' name='ajouterb' value='Ajouter un nouveau bloc'></from><br>";
 			echo "<form method='post' action=''> <input type='submit' name='supp' value='Supprimer cet article'></from><br>";
 			echo "<form method='post' action=''> <input type='submit' name='soumettre' value='Soumettre cet article'></from> <font size='2' color='red'><br>Une fois soumis, cet article ne peux plus être modifié !</font><br>";
-			echo "<br><h4>-------------------------------------------------------------------------------------------------</h4><br></div>";
+			echo "<br><h4>-------------------------------------------------------------------------------------------------</h4><br>";
 			if(isset($_POST["ajouterb"])) {Header("Location:bloc.php?choix=ajouter");}
 			elseif(isset($_POST["supp"])) {
 				$vSql =	"UPDATE ARTICLE SET statut='supprime', modi='$_SESSION[login]' WHERE id=$_SESSION[art];";
@@ -222,11 +222,12 @@
 			};
 		};
 	};//fin auteur fonctionnement
-	
-	
+	echo"</div>";
+
+
 //Afficher des commentaires
 	echo "<div align='center'>";
-	echo "<h4>-------------------------COMMENTAIRE-------------------------</h4></div>";
+	echo "<h4>-------------------------COMMENTAIRE & NOTES-------------------------</h4></div>";
 	$vSql =	"SELECT id, aDate AS date, creator, texte, statut FROM COMMENTAIRE WHERE art='$_SESSION[art]' ORDER BY aDate;";
 	$vQuery=pg_query($vConn,$vSql);
 
@@ -259,6 +260,7 @@
 		};//fin if affhiche commentaire
 	};//fin while commentaire
 
+
 //Ajouter un commentaire
 	if($_SESSION["user"]!="visiteur"){
 		echo "<br><b>Ajoutez un commentaire à cet article : </b><br>";
@@ -280,7 +282,58 @@
 			};
 			
 		};
+
+	};
+
+//Afficher le note	
+	echo"<b> NOTE MOYEN: </b><br>";
+	$vSql =	"SELECT AVG(note) AS moyen, COUNT(*) AS nb FROM NOTE WHERE art=$_SESSION[art];";
+	$vQuery=pg_query($vConn,$vSql);
+	$vResult = pg_fetch_array($vQuery);
+	if($vResult["nb"]==0){
+		echo"Il n'y a personne qui a noté.<br>";
+	}
+	else{
+		echo"$vResult[nb] personnes ont noté : $vResult[moyen]<br>";
+	};
+
+//Noter l'article
+	if($_SESSION["user"]!="visiteur"){
 		
+		$vSql =	"SELECT note FROM NOTE WHERE noteur='$_SESSION[login]' AND art =$_SESSION[art];";
+		$vQuery=pg_query($vConn,$vSql);
+		$vResult = pg_fetch_array($vQuery);
+		if($vResult["note"]==NULL){
+			echo"<br><b>Noter l'article : </b>";
+
+		}else{
+			echo"<br><b>Vous avez déjà noté : $vResult[note]</b> /10<br>";
+			echo"<br><b>Changez votre note : </b>";
+		};
+			echo "<form method='post' action=''> ";
+			echo "<input type='text' name='note' size='5'/> /10              ";
+			echo "<input type='submit' name='submitnote' value='Submit'><br>";
+			echo "</form>";
+
+			if(isset($_POST["submitnote"])){
+				if(empty($_POST["note"])){
+					echo "<font size='2' color='red'>Saisissez votre note, s'il vous plaît !</font><br>";
+				}
+				else{
+					$note=$_POST["note"];
+					if($vResult["note"]==NULL){
+						$vSql =	"INSERT INTO NOTE(art, noteur, note) VALUES($_SESSION[art], '$_SESSION[login]',$note );";
+
+					}else{
+						$vSql =	"UPDATE NOTE SET note = $note WHERE art=$_SESSION[art] AND noteur= '$_SESSION[login];";
+					};
+					$vQuery=pg_query($vConn,$vSql);
+					Header("Location:article.php");
+				};
+			
+			};
+
+
 	};
 
 //Des articles lies
